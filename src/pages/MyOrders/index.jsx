@@ -1,13 +1,5 @@
-
-
 function MyOrders() {
-  
-
-  return (
-    <div className='bg-red-100'>
-    MyOrders
-    </div>
-  )
+  return <div>MyOrders</div>;
 }
 
-export default MyOrders
+export default MyOrders;
