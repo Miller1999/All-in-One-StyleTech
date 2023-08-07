@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
-import Card from "../../Components/Card";
 import { useEffect } from "react";
+import Card from "../../Components/Card";
+import ProductDetail from "../../Components/ProductDetail";
 
 function Home() {
   const [products, setProducts] = useState(null);
@@ -17,6 +18,7 @@ function Home() {
           return <Card key={card.id} data={card} />;
         })}
       </div>
+      <ProductDetail />
     </Fragment>
   );
 }
