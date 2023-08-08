@@ -9,9 +9,14 @@ export const ShoppingCartProvider = ({ children }) => {
   const [productDetail, setproductDetail] = useState(false);
   const openProductDetail = () => setproductDetail(true);
   const closeProductDetail = () => setproductDetail(false);
+  //Mostrat/Ocultar -> Checkout
+  const [CheckoutSideMenu, setCheckoutSideMenu] = useState(false);
+  const openCheckoutSideMenu = () => setCheckoutSideMenu(true);
+  const closeCheckoutSideMenu = () => setCheckoutSideMenu(false);
   //Info del producto -> Product Detail
   const [productShow, setProductShow] = useState({});
-
+  //Cart Products
+  const [cartProducts, setCartProducts] = useState([]);
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -22,6 +27,11 @@ export const ShoppingCartProvider = ({ children }) => {
         productDetail,
         productShow,
         setProductShow,
+        cartProducts,
+        setCartProducts,
+        CheckoutSideMenu,
+        openCheckoutSideMenu,
+        closeCheckoutSideMenu,
       }}
     >
       {children}

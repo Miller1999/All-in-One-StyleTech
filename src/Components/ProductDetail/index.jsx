@@ -20,7 +20,7 @@ const ProductDetail = () => {
       <figure className="px-6 flex justify-center">
         <img
           className="w-3/4 h-full rounded-lg"
-          src={productShow.images[0]}
+          src={productShow.images?.[0]}
           alt={productShow.title}
         />
       </figure>
