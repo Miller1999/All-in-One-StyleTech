@@ -2,6 +2,27 @@ import { createContext, useState, useEffect } from "react";
 
 export const ShoppingCartContext = createContext();
 
+export const LocalStorageInit = () => {
+  const LocalAccount = localStorage.getItem("account");
+  const LocalSingOut = localStorage.getItem("sign-out");
+  let parsedAccount;
+  let parsedSignOut;
+
+  if (!LocalAccount) {
+    localStorage.setItem("account", JSON.stringify({}));
+    parsedAccount = {};
+  } else {
+    parsedAccount = JSON.parse(LocalAccount);
+  }
+
+  if (!LocalSingOut) {
+    localStorage.setItem("sign-out", JSON.stringify(false));
+    parsedSignOut = false;
+  } else {
+    parsedSignOut = JSON.parse(LocalSingOut);
+  }
+};
+
 export const ShoppingCartProvider = ({ children }) => {
   //Mostrat/Ocultar -> ProductDetail
   const [productDetail, setproductDetail] = useState(false);
@@ -24,13 +45,16 @@ export const ShoppingCartProvider = ({ children }) => {
   const [searchTitle, setSearchTitle] = useState(null);
   //By category
   const [searchCategory, setSearchCategory] = useState(null);
-
+  // LocalStorageItems
+  const [account, setAccount] = useState({});
+  const [signOut, setSignOut] = useState(false);
+  //API
   useEffect(() => {
     fetch("https://api.escuelajs.co/api/v1/products")
       .then((res) => res.json())
       .then((data) => setProducts(data));
   }, []);
-
+  //Filters
   const filteredItemsbyTitle = (products, searchTitle) => {
     return products?.filter((product) =>
       product.title.toLowerCase().includes(searchTitle.toLowerCase())
@@ -99,6 +123,10 @@ export const ShoppingCartProvider = ({ children }) => {
         filteredItems,
         searchCategory,
         setSearchCategory,
+        account,
+        setAccount,
+        signOut,
+        setSignOut,
       }}
     >
       {children}
