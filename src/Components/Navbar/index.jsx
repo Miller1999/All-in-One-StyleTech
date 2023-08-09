@@ -4,7 +4,8 @@ import { useContext } from "react";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
-  const { count } = useContext(ShoppingCartContext);
+  const { setSearchCategory, openCheckoutSideMenu, cartProducts } =
+    useContext(ShoppingCartContext);
   const activeStyle = "underline underline-offset-4";
   return (
     <nav className="flex justify-between items-center fixed top-0 z-10 w-full py-5 px-8 text-sm font-light bg-white">
@@ -15,6 +16,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/"
+            onClick={() => setSearchCategory()}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             All
@@ -23,6 +25,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/clothes"
+            onClick={() => setSearchCategory("clothes")}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             Clothes
@@ -31,6 +34,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/electronics"
+            onClick={() => setSearchCategory("electronics")}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             Electronics
@@ -39,6 +43,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/furniture"
+            onClick={() => setSearchCategory("furniture")}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             Furniture
@@ -47,6 +52,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/toys"
+            onClick={() => setSearchCategory("toys")}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             Toys
@@ -55,6 +61,7 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/others"
+            onClick={() => setSearchCategory("others")}
             className={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
             Others
@@ -88,7 +95,11 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className="flex">
-          <ShoppingCartIcon className="w-6 h-6" /> {count}
+          <ShoppingCartIcon
+            className="w-6 h-6  cursor-pointer"
+            onClick={() => openCheckoutSideMenu()}
+          />{" "}
+          {cartProducts.length}
         </li>
       </ul>
     </nav>

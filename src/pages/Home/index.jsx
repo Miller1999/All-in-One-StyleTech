@@ -1,22 +1,35 @@
-import { Fragment, useState } from "react";
-import { useEffect } from "react";
+import { Fragment } from "react";
+import { ShoppingCartContext } from "../../Context";
+import { useContext } from "react";
 import Card from "../../Components/Card";
 import ProductDetail from "../../Components/ProductDetail";
 
 function Home() {
-  const [products, setProducts] = useState(null);
-  useEffect(() => {
-    fetch("https://api.escuelajs.co/api/v1/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
+  const { setSearchTitle, filteredItems } = useContext(ShoppingCartContext);
+
+  const renderView = () => {
+    if (filteredItems?.length > 0) {
+      return filteredItems?.map((card) => {
+        return <Card key={card.id} data={card} />;
+      });
+    } else {
+      return <div>We do not have existences</div>;
+    }
+  };
+
   return (
     <Fragment>
-      Home
+      <div className="flex w-80 items-center relative justify-center mb-4">
+        <h1 className="font-medium text-xl">Exclusive Products</h1>
+      </div>
+      <input
+        type="text"
+        placeholder="Search your product..."
+        className="rounded-lg border border-black w-80 p-4 mb-4 focus:outline-none"
+        onChange={(event) => setSearchTitle(event.target.value)}
+      />
       <div className="grid gap-4 grid-cols-4 w-full max-w-screen-lg">
-        {products?.map((card) => {
-          return <Card key={card.id} data={card} />;
-        })}
+        {renderView()}
       </div>
       <ProductDetail />
     </Fragment>

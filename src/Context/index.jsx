@@ -1,10 +1,8 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const ShoppingCartContext = createContext();
 
 export const ShoppingCartProvider = ({ children }) => {
-  //Increment Count -> Shopping Cart
-  const [count, setCount] = useState(0);
   //Mostrat/Ocultar -> ProductDetail
   const [productDetail, setproductDetail] = useState(false);
   const openProductDetail = () => setproductDetail(true);
@@ -19,11 +17,69 @@ export const ShoppingCartProvider = ({ children }) => {
   const [cartProducts, setCartProducts] = useState([]);
   //Order
   const [order, setOrder] = useState([]);
+  //Get products
+  const [products, setProducts] = useState(null);
+  const [filteredItems, setfilteredItems] = useState(null);
+  //By title
+  const [searchTitle, setSearchTitle] = useState(null);
+  //By category
+  const [searchCategory, setSearchCategory] = useState(null);
+
+  useEffect(() => {
+    fetch("https://api.escuelajs.co/api/v1/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
+
+  const filteredItemsbyTitle = (products, searchTitle) => {
+    return products?.filter((product) =>
+      product.title.toLowerCase().includes(searchTitle.toLowerCase())
+    );
+  };
+
+  const filteredItemsbyCategory = (products, searchCategory) => {
+    return products?.filter((product) =>
+      product.category.name.toLowerCase().includes(searchCategory.toLowerCase())
+    );
+  };
+
+  const filterBy = (searchType, products, searchTitle, searchCategory) => {
+    if (searchType === "title")
+      return filteredItemsbyTitle(products, searchTitle);
+    if (searchType === "category")
+      return filteredItemsbyCategory(products, searchCategory);
+    if (searchType === "titleAndcategory")
+      return filteredItemsbyCategory(products, searchCategory).filter(
+        (product) =>
+          product.title.toLowerCase().includes(searchTitle.toLowerCase())
+      );
+    if (!searchType) return products;
+  };
+
+  useEffect(() => {
+    if (searchTitle && !searchCategory) {
+      setfilteredItems(
+        filterBy("title", products, searchTitle, searchCategory)
+      );
+    }
+    if (!searchTitle && searchCategory) {
+      setfilteredItems(
+        filterBy("category", products, searchTitle, searchCategory)
+      );
+    }
+    if (!searchTitle && !searchCategory) {
+      setfilteredItems(filterBy(null, products, searchTitle, searchCategory));
+    }
+    if (searchTitle && searchCategory) {
+      setfilteredItems(
+        filterBy("titleAndcategory", products, searchTitle, searchCategory)
+      );
+    }
+  }, [products, searchTitle, searchCategory]);
+
   return (
     <ShoppingCartContext.Provider
       value={{
-        count,
-        setCount,
         openProductDetail,
         closeProductDetail,
         productDetail,
@@ -36,6 +92,13 @@ export const ShoppingCartProvider = ({ children }) => {
         closeCheckoutSideMenu,
         order,
         setOrder,
+        products,
+        setProducts,
+        searchTitle,
+        setSearchTitle,
+        filteredItems,
+        searchCategory,
+        setSearchCategory,
       }}
     >
       {children}
