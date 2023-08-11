@@ -1,23 +1,27 @@
 import { NavLink } from "react-router-dom";
 import { ShoppingCartContext } from "../../Context";
 import { useContext } from "react";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
+import ShoppingCart from "../ShoppingCart";
 
 const Navbar = () => {
-  const {
-    setSearchCategory,
-    openCheckoutSideMenu,
-    cartProducts,
-    signOut,
-    setSignOut,
-  } = useContext(ShoppingCartContext);
+  const { setSearchCategory, signOut, setSignOut, account } =
+    useContext(ShoppingCartContext);
 
   const activeStyle = "underline underline-offset-4";
 
   const SignOut = localStorage.getItem("sign-out");
   const parsedSignOut = JSON.parse(SignOut);
-  const SingedOut = signOut || parsedSignOut;
+  const SignedOut = signOut || parsedSignOut;
+
+  const accountGet = localStorage.getItem("account");
+  const parsedAccount = JSON.parse(accountGet);
+  //Account user?
+  const accountInLocal = parsedAccount
+    ? Object.keys(parsedAccount).length === 0
+    : true;
+  const accountInState = account ? Object.keys(account).length === 0 : true;
+  const userAccount = !accountInLocal || !accountInState;
 
   const handleSignOut = () => {
     const stringifySignOut = JSON.stringify(true);
@@ -26,22 +30,10 @@ const Navbar = () => {
   };
 
   const RenderView = () => {
-    if (SingedOut) {
-      return (
-        <li>
-          <NavLink
-            to="/sign-in"
-            className={({ isActive }) => (isActive ? activeStyle : undefined)}
-            onClick={() => handleSignOut()}
-          >
-            Sign Out
-          </NavLink>
-        </li>
-      );
-    } else {
+    if (userAccount && !SignedOut) {
       return (
         <Fragment>
-          <li className="text-black/60">millerarias@platzi.com</li>
+          <li className="text-black/60">{parsedAccount?.email}</li>
           <li>
             <NavLink
               to="/my-orders"
@@ -67,23 +59,32 @@ const Navbar = () => {
               Sign Out
             </NavLink>
           </li>
-          <li className="flex">
-            <ShoppingCartIcon
-              className="w-6 h-6  cursor-pointer"
-              onClick={() => openCheckoutSideMenu()}
-            />{" "}
-            {cartProducts.length}
+          <li className="flex items-center">
+            <ShoppingCart />
           </li>
         </Fragment>
       );
+    } else {
+      return (
+        <li>
+          <NavLink
+            to="/sign-in"
+            className={({ isActive }) => (isActive ? activeStyle : undefined)}
+            onClick={() => handleSignOut()}
+          >
+            Sign In
+          </NavLink>
+        </li>
+      );
     }
   };
-
   return (
     <nav className="flex justify-between items-center fixed top-0 z-10 w-full py-5 px-8 text-sm font-light bg-white">
       <ul className="flex items-center gap-3">
         <li className="font-semibold text-lg">
-          <NavLink to="/">All-In-One StyleTech</NavLink>
+          <NavLink to={`${SignedOut ? "/sign-in" : "/"}`}>
+            All-In-One StyleTech
+          </NavLink>
         </li>
         <li>
           <NavLink

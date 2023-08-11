@@ -1,6 +1,11 @@
 //!importar lo de react
-import { useRoutes, BrowserRouter } from "react-router-dom";
-import { ShoppingCartProvider } from "../../Context";
+import { useRoutes, BrowserRouter, Navigate } from "react-router-dom";
+import {
+  ShoppingCartProvider,
+  LocalStorageInit,
+  ShoppingCartContext,
+} from "../../Context";
+import { useContext } from "react";
 //!importar componentes
 import Home from "../Home";
 import MyAccount from "../MyAccount";
@@ -14,13 +19,74 @@ import CheckoutSideMenu from "../../Components/CheckoutSideMenu";
 import "./App.css";
 
 function AppRoutes() {
+  const { account, signOut } = useContext(ShoppingCartContext);
+  const SignOut = localStorage.getItem("sign-out");
+  const parsedSignOut = JSON.parse(SignOut);
+  const SignedOut = signOut || parsedSignOut;
+
+  const accountGet = localStorage.getItem("account");
+  const parsedAccount = JSON.parse(accountGet);
+  //Account user?
+  const accountInLocal = parsedAccount
+    ? Object.keys(parsedAccount).length === 0
+    : true;
+  const accountInState = account ? Object.keys(account).length === 0 : true;
+  const userAccount = !accountInLocal || !accountInState;
   let routes = useRoutes([
-    { path: "/", element: <Home /> },
-    { path: "/clothes", element: <Home /> },
-    { path: "/electronics", element: <Home /> },
-    { path: "/furniture", element: <Home /> },
-    { path: "/toys", element: <Home /> },
-    { path: "/others", element: <Home /> },
+    {
+      path: "/",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
+    {
+      path: "/clothes",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
+    {
+      path: "/electronics",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
+    {
+      path: "/furniture",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
+    {
+      path: "/toys",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
+    {
+      path: "/others",
+      element:
+        userAccount && !SignedOut ? (
+          <Home />
+        ) : (
+          <Navigate replace to={"/sign-in"} />
+        ),
+    },
     { path: "/my-account", element: <MyAccount /> },
     { path: "/my-order", element: <MyOrder /> },
     { path: "/my-orders", element: <MyOrders /> },
@@ -33,6 +99,7 @@ function AppRoutes() {
 }
 
 function App() {
+  LocalStorageInit();
   return (
     <ShoppingCartProvider>
       <BrowserRouter>
