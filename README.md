@@ -15,6 +15,7 @@ Desarrollé un Ecommerce durante el curso de React.js con Vite.js y TailwindCSS 
 ### Demostraciones
 La pagina se puede ver en el link a continuacion
 ## [All-in-One StyleTech](https://all-in-one-style-tech.vercel.app/) 
+## [All-in-One StyleTech v2](https://all-in-one-style-tech-v2.vercel.app/)
 Las diferentes pantallas de la pagina son:
 ### Principal
 ![Escritorio](https://github.com/Miller1999/All-in-One-StyleTech/assets/22383830/872ce2ca-ab7c-421b-833b-ceadbd294b55)
